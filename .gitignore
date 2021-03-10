@@ -3,3 +3,5 @@ renderings/
 *.jpg
 *.ppm
 *.xopp
+!*.cpp
+!*.h

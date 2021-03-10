@@ -21,6 +21,14 @@ Renderer::Renderer(int width_, int height_):
 
 }
 
+void Renderer::setSkybox(const Skybox& skybox_){
+
+	skybox = &skybox_;
+	bckType = BkgType::SKYBOX;
+}
+
+
+
 void Renderer::setRays(const Camera& cam){
 	/* sets the rays vector */
 
@@ -106,58 +114,6 @@ bool Renderer::getScatteredRays(Ray& r, Ray& e, const Vector& n, const Vector& v
 	}
 }
 
-
-//bool Renderer::getScatteredRays(Ray& r, Ray& e, const Vector& n, const Vector& v, const Vector& d, float eta){
-//	/* returns true if there is refraction */
-//	
-//	float scl = d * n;
-//	bool inside = (scl >= 0.0f);
-//
-//	float c = 1.0f - scl * scl;
-//	
-//	Vector refl = d - 2.0f * scl * n;
-//	Vector q;
-//
-//	if (scl >= -ZERO_TOLL and scl <= ZERO_TOLL){
-//		Vector q = d - scl * n;
-//		q.normalize();
-//	}
-//
-//
-//	if (not inside){
-//		/* rays origin is outside the hittable */
-//
-//		Vector refr = -sqrt(1.0f - c / (eta * eta)) * n + sqrt(c) / eta * q;
-//		
-//		/* rays settings */
-//		r.setOrigin(v + DELTA * n);
-//		r.setDirection(refl);
-//
-//		e.setOrigin(v - DELTA * n);
-//		e.setDirection(refr);
-//	}
-//
-//	else{
-//		/* rays origin is inside the hittable */
-//
-//		r.setOrigin(v - DELTA * n);
-//		r.setDirection(refl);
-//
-//		if (not c * (eta * eta) < 1.0f){
-//			/* no refraction (incidence >= critical angle) */
-//
-//			return false;
-//		}
-//		else{
-//			
-//			Vector refr = sqrt(1.0f - c * eta * eta) * n + sqrt(c) * eta * q;
-//
-//			e.setOrigin(v + DELTA * n);
-//			e.setDirection(refr);
-//		}
-//	}
-//	return true;
-//}
 	
 
 void Renderer::checkIntersections(const Ray& ray, std::vector<Hittable*>& hittables, Collision& collision) const{
@@ -188,7 +144,18 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, co
 	if (not collision.hasCollided or depth == MAX_RECURSION_DEPTH){
 		/* there is no collision */
 
-		return BCK_COLOR;
+		if (bckType == BkgType::DEFAULT){
+
+			return BCK_COLOR;
+		}
+		else if (bckType == BkgType::SKYBOX){
+
+			return skybox -> sampleTexture(ray);
+		}
+		else{
+			/* TODO: cube map */
+			return BCK_COLOR;
+		}
 	}
 	else{
 		/* recursive path floowing */

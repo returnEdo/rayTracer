@@ -22,7 +22,7 @@ const Vector	DEF_LIGHT_COL(1.0f, 1.0f, 1.0f);
 
 /* Renderer constants */
 const Vector	BCK_COLOR(.2f, .2f, .2f);
-const int 	MAX_RECURSION_DEPTH	= 7;
+const int 	MAX_RECURSION_DEPTH	= 5;
 const float 	DELTA		= .00001f;
 const float	ZERO_TOLL	= .00001f;
 

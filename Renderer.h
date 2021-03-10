@@ -9,9 +9,18 @@
 #include "Camera.h"
 #include "Matrix.h"
 #include "Vector.h"
-
+#include "Skybox.h"
 
 float randf(float);
+
+
+enum class BkgType{
+
+	DEFAULT,
+	SKYBOX,
+	CUBEMAP
+};
+
 
 class Renderer{
 
@@ -24,6 +33,10 @@ class Renderer{
 
 	bool isBar = false;
 
+	/* background */
+	BkgType bckType = BkgType::DEFAULT;
+	const Skybox* skybox;
+
 	void clamp(Vector& vec) const;
 
 	public:
@@ -32,6 +45,7 @@ class Renderer{
 
 	/* setters */
 	inline void setIsBar(bool isBar_)	{ isBar = isBar_; }
+	void setSkybox(const Skybox& skybox_);
 	void setRays(const Camera& cam);
 
 	bool getScatteredRays(Ray& r, Ray& e, const Vector& n, const Vector& v, const Vector& d, float eta);

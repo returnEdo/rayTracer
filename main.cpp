@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Ray.h"
+#include "Skybox.h"
 #include "Renderer.h"
 #include "Sphere.h"
 #include "ChequeredPlane.h"
@@ -15,21 +16,26 @@
 
 int main(){
 
-	const int width = 1000;
+	const int width = 1500;
 	const int height = width;
 	
 	std::string address = "renderings/trial.ppm";
 	std::string textAddr = "earth.jpg";
+	std::string skyAddr = "skyboxes/milky.jpg";
 	std::vector<Vector> colors;
 
 	float r = 1.0f;
 
+	Skybox skybox(skyAddr);
+	skybox.setPhi(3.14f);
+
 	Camera camera(Vector(.0f * r, .2f, 6.0f * r), Vector(.0f, .0f, .0f));
 	Renderer renderer(width, height);
 	renderer.setIsBar(true);
+	renderer.setSkybox(skybox);
 	renderer.setRays(camera);
 
-	Sphere sphere1(Vector(r * 1.0f, 0.0f, -r * 6.0f), r);
+	Sphere sphere1(Vector(r * 2.0f, 0.0f, -r * 6.0f), r);
 	sphere1.getMaterial().color = Vector(.8f, .2f, .2f);
 	sphere1.getMaterial().psia = .3f;
 	sphere1.getMaterial().psis = .8f;
@@ -49,14 +55,16 @@ int main(){
 //	sphere2.getMaterial().f = 400.0f;
 
 	Sphere sphere2(Vector(), r);
-	sphere2.getMaterial().color = Vector(.2f, .8f, .2f);
+	sphere2.getMaterial().color = Vector(.3f, .3f, .3f);
 	sphere2.getMaterial().psia = .3f;
 	sphere2.getMaterial().psis = .6f;
 	sphere2.getMaterial().psid = .6f;
 	sphere2.getMaterial().rhor = .0f;
-	sphere2.getMaterial().rhoe = .9f;
+	sphere2.getMaterial().rhoe = .8f;
 	sphere2.getMaterial().f = 400.0f;
 	sphere2.getMaterial().eta = 1.2f;
+
+	sphere2.setTexture(textAddr);
 
 //	sphere2.setTexture(textAddr);
 
@@ -70,6 +78,7 @@ int main(){
 	sphere3.getMaterial().f = 100.0f;
 
 	sphere3.setTexture(textAddr);
+
 
 	Sphere sphere4(Vector(.0f, 4.0f * r, .0f), r * 2.0f);
 	sphere4.getMaterial().color = Vector(.8f, .8f, .8f);
@@ -92,9 +101,8 @@ int main(){
 	Light light1(Vector(50.0f, 50.0f, 50.0f));
 	Light light2(Vector(-2.0f * r, 40.0f, -2.0f * r));
 
-	std::vector<Hittable*> hittables = {&sphere1, &sphere2,
-					    &sphere3, &sphere4
-					    //&plane
+	std::vector<Hittable*> hittables = {&sphere2,
+					    &sphere1
 					    };
 	std::vector<Light> lights = {light1, light2};
 

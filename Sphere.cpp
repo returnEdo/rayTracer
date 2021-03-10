@@ -11,9 +11,15 @@ const Vector& Sphere::sampleTexture(float theta, float y) const{
 
 	theta += M_PI;
 
+	theta = (theta < .0f? .0f: theta);
+	theta = (theta > 2.0f * M_PI? 2.0f * M_PI: theta);
+
+	y = (y > radius? radius: y);
+	y = (y < -radius? -radius: y);
+	
 	int wi = static_cast<int>(static_cast<float>(textWidth) * theta / (2.0f * M_PI));
 	int hi = static_cast<int>((radius - y) * (static_cast<float>(textHeight)) / (2.0f * radius));
-	
+
 	return texture[hi * textWidth + wi]; 
 }
 

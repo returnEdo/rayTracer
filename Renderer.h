@@ -10,6 +10,7 @@
 #include "Matrix.h"
 #include "Vector.h"
 #include "Skybox.h"
+#include "Scene.h"
 
 float randf(float);
 
@@ -48,11 +49,16 @@ class Renderer{
 	void setSkybox(const Skybox& skybox_);
 	void setRays(const Camera& cam);
 
+	/* getters */
+	inline int getWidth(void) 	const { return width; }
+	inline int getHeight(void) 	const { return height; }
+
 	bool getScatteredRays(Ray& r, Ray& e, const Vector& n, const Vector& v, const Vector& d, float eta);
 	void checkIntersections(const Ray& ray, std::vector<Hittable*>& hittables, Collision& collision) const;
 
 	Vector findColor(const Ray& ray, std::vector<Hittable*>& hittables, const std::vector<Light>& lights, int depth = 0);
 	void findColors(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, std::vector<Vector>& colors);
+	void findColors(Scene& scene, std::vector<Vector>& colors);
 	void findColorsAppend(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, std::vector<Vector>& colors, float oneN);
 
 	void depthOfField(const Camera& baseCam, const Vector& f, float a, unsigned int N,

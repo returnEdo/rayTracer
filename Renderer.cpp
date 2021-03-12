@@ -13,20 +13,18 @@ float randf(float vmax){
 }
 
 
-
-
 Renderer::Renderer(int width_, int height_):
 		width(width_), height(height_) {
 	
 
 }
 
+
 void Renderer::setSkybox(const Skybox& skybox_){
 
 	skybox = &skybox_;
 	bckType = BkgType::SKYBOX;
 }
-
 
 
 void Renderer::setRays(const Camera& cam){
@@ -115,7 +113,6 @@ bool Renderer::getScatteredRays(Ray& r, Ray& e, const Vector& n, const Vector& v
 }
 
 	
-
 void Renderer::checkIntersections(const Ray& ray, std::vector<Hittable*>& hittables, Collision& collision) const{
 	/* finds the closest collision if any */
 
@@ -132,7 +129,6 @@ void Renderer::checkIntersections(const Ray& ray, std::vector<Hittable*>& hittab
 		}
 	}
 }
-
 
 
 Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, const std::vector<Light>& lights, int depth) {
@@ -237,6 +233,13 @@ void Renderer::findColors(std::vector<Hittable*>& hittables, const std::vector<L
 			bar.update(i++);
 	}
 }
+
+
+void Renderer::findColors(Scene& scene, std::vector<Vector>& colors){
+
+	findColors(scene.getHittables(), scene.getLights(), colors);
+}
+
 
 
 void Renderer::findColorsAppend(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, std::vector<Vector>& colors, float oneN){

@@ -12,6 +12,7 @@
 #include "Vector.h"
 #include "Camera.h"
 #include "PPMtools.h"
+#include "JPGTools.h"
 
 
 int main(){
@@ -19,7 +20,7 @@ int main(){
 	const int width = 1500;
 	const int height = width;
 	
-	std::string address = "renderings/trial.ppm";
+	std::string address = "renderings/trial.jpg";
 	std::string textAddr = "earth.jpg";
 	std::string skyAddr = "skyboxes/milky.jpg";
 	std::vector<Vector> colors;
@@ -115,7 +116,8 @@ int main(){
 	
 	renderer.findColors(hittables, lights, colors);
 	
-	savePPM(address, colors, width, height);
+//	savePPM(address, colors, width, height);
+	saveJpg(address, renderer.getWidth(), renderer.getHeight(), colors);
 	
 
 	

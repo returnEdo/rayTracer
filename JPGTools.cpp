@@ -44,9 +44,9 @@ void saveJpg(const std::string& addr, int width, int height, const std::vector<V
 
 	for (int i = 0, j = 0; i < width * height; i++, j += 3){
 
-		rawData.push_back(static_cast<unsigned char>(data[i].x * 255.0f));
-		rawData.push_back(static_cast<unsigned char>(data[i].y * 255.0f));
-		rawData.push_back(static_cast<unsigned char>(data[i].z * 255.0f));
+		rawData.push_back(static_cast<unsigned char>(data[i].x));
+		rawData.push_back(static_cast<unsigned char>(data[i].y));
+		rawData.push_back(static_cast<unsigned char>(data[i].z));
 	}
 	
 	const char* rawAddr = addr.data();

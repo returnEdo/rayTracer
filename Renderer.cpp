@@ -185,7 +185,7 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, co
 				if (not shadowCollision.hasCollided){
 					/* there is direct illumination */
 					/* add diffusion and specular reflection effects */
-					
+
 					color += (m.color % light.getColor()) * (m.psid * (lightScl) + m.psis * pow((r.getDirection() * l), m.f) / (1.0f - m.rhor - m.rhoe));
 				}
 			}

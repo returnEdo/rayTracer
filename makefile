@@ -1,5 +1,8 @@
-main: main2.cpp Scene.o Skybox.o JPGTools.o Hittable.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o
-	g++ main2.cpp Scene.o Skybox.o JPGTools.o Hittable.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o -o main
+main: main2.cpp Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o
+	g++ main2.cpp Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o -o main
+
+Cylinder.o: Cylinder.cpp
+	g++ Cylinder.cpp -c
 
 Cuboid.o: Cuboid.cpp
 	g++ Cuboid.cpp -c

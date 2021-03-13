@@ -8,17 +8,19 @@
 #include "Renderer.h"
 #include "Sphere.h"
 #include "Cuboid.h"
+#include "Cylinder.h"
 #include "ChequeredPlane.h"
 #include "Collision.h"
 #include "Vector.h"
 #include "Camera.h"
 #include "PPMtools.h"
 #include "JPGTools.h"
+#include "PastelPalette.h"
 
 
 int main(){
 
-	const int width = 2000;
+	const int width = 500;
 	const int height = width;
 	
 	std::string address = "renderings/trial.jpg";
@@ -31,14 +33,14 @@ int main(){
 	Skybox skybox(skyAddr);
 	skybox.setPhi(3.14f);
 
-	Camera camera(Vector(3.0f, 3.0f, 3.0f), Vector(.0f, .0f, .0f));
+	Camera camera(Vector(.0f, 4.0f, 4.0f), Vector(.0f, .0f, .0f));
 	Renderer renderer(width, height);
 	renderer.setIsBar(true);
-	renderer.setSkybox(skybox);
+	//renderer.setSkybox(skybox);
 	renderer.setRays(camera);
 
-	Sphere sphere1(Vector(), r);
-	sphere1.getMaterial().color = Vector(.8f, .2f, .2f);
+	Sphere sphere1(Vector(1.0f, .0f, -3.0f), 2.0f);
+	sphere1.getMaterial().color = MAGIC_MINT;
 	sphere1.getMaterial().psia = .3f;
 	sphere1.getMaterial().psis = .6f;
 	sphere1.getMaterial().psid = .6f;
@@ -48,22 +50,34 @@ int main(){
 	sphere1.getMaterial().eta = 1.23f;
 
 	Cuboid cuboid(Vector(1.0f, 1.0f, 1.0f), Vector(), Vector(1.0f, .0f, .0f), .75);
-	cuboid.getMaterial().color = Vector(.8f, .2f, .2f);
+	cuboid.getMaterial().color = MAGIC_MINT;
 	cuboid.getMaterial().psia = .3f;
 	cuboid.getMaterial().psis = .6f;
 	cuboid.getMaterial().psid = .6f;
-	cuboid.getMaterial().rhor = .00f;
-	cuboid.getMaterial().rhoe = .70f;
+	cuboid.getMaterial().rhor = .25f;
+	cuboid.getMaterial().rhoe = .00f;
 	cuboid.getMaterial().f = 108.0f;
 	cuboid.getMaterial().eta = 1.23f;
 
+	Cylinder cylinder(4.0f, 1.3f, Vector(.0f, -2.0f, .0f), Vector(.0f, .0f, 1.0f), .0f);
+	cylinder.getMaterial().color = Vector(.8f, .2f, .2f);
+	cylinder.getMaterial().psia = .3f;
+	cylinder.getMaterial().psis = .7f;
+	cylinder.getMaterial().psid = .6f;
+	cylinder.getMaterial().rhor = .25f;
+	cylinder.getMaterial().rhoe = .70f;
+	cylinder.getMaterial().f = 108.0f;
+	cylinder.getMaterial().eta = 1.13f;
 
-	Light light1(Vector(50.0f, 50.0f, 50.0f));
-	Light light2(Vector(-2.0f * r, 40.0f, -2.0f * r));
+	ChequeredPlane plane(-2.0f, INDIGO, SALMON);
 
-	std::vector<Hittable*> hittables = {&cuboid
+
+	Light light1(Vector(10.0f, .0f, .0f));
+
+	std::vector<Hittable*> hittables = {&cylinder,
+					    &sphere1
 					    };
-	std::vector<Light> lights = {light1, light2};
+	std::vector<Light> lights = {light1};
 
 	
 	renderer.findColors(hittables, lights, colors);

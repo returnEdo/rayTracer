@@ -185,22 +185,29 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, co
 				if (not shadowCollision.hasCollided){
 					/* there is direct illumination */
 					/* add diffusion and specular reflection effects */
-
-					color += (m.color % light.getColor()) * (m.psid * (lightScl) + m.psis * pow((r.getDirection() * l), m.f) / (1.0f - m.rhor - m.rhoe));
+					
+					color += (m.color % light.getColor()) * (m.psid * (lightScl) + 
+										 m.psis * pow((r.getDirection() * l), m.f) / 
+										 (1.0f - m.rhor - m.rhoe));
 				}
 			}
 		}
 		
 		
-		if (isRefracted){
-			return (1.0f - m.rhor - m.rhoe) * color
-				+ m.rhor * findColor(r, hittables, lights, depth + 1)
-				+ m.rhoe * findColor(e, hittables, lights, depth + 1);
+
+		color *= (1.0f - m.rhor - m.rhoe);
+		
+		if (isRefracted and m.rhoe >= MINIMUM_INDEX){
+			
+			color += m.rhoe * findColor(e, hittables, lights, depth + 1);
 		}
-		else{
-			return (1.0f - m.rhor - m.rhoe) * color
-				+ m.rhor * findColor(r, hittables, lights, depth + 1);
+
+		if (m.rhor >= MINIMUM_INDEX){
+
+			color += m.rhor * findColor(r, hittables, lights, depth + 1);
 		}
+
+		return color;
 	}
 }
 

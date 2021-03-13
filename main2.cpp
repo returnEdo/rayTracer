@@ -20,7 +20,7 @@
 
 int main(){
 
-	const int width = 500;
+	const int width = 1500;
 	const int height = width;
 	
 	std::string address = "renderings/trial.jpg";

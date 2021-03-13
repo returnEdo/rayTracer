@@ -12,11 +12,17 @@ float randf(float vmax){
 	return static_cast<float>(rand() / static_cast<float>(RAND_MAX)) * vmax;
 }
 
-
-Renderer::Renderer(int width_, int height_):
-		width(width_), height(height_) {
+float randf(float m, float M){
 	
+	return (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * (M - m) + m);
 
+}
+
+Renderer::Renderer(int width_, int height_, int na_):
+		width(width_),
+		height(height_),
+		na(na_) {
+	
 }
 
 
@@ -197,6 +203,7 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, co
 
 		color *= (1.0f - m.rhor - m.rhoe);
 		
+		/* if the coefficients are too low generating new rays is not convenient */
 		if (isRefracted and m.rhoe >= MINIMUM_INDEX){
 			
 			color += m.rhoe * findColor(e, hittables, lights, depth + 1);
@@ -224,27 +231,77 @@ void Renderer::clamp(Vector& vec) const{
 	vec.z = (vec.z <= 255.0f? vec.z: 255.0f);
 }
 
+//
+//void Renderer::findColors(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, std::vector<Vector>& colors){
+//	/* follows each ray generated in the constructor */
+//
+//	ProgressBar bar(50, width * height);
+//	
+//	int i = 1;
+//	for (const Ray& ray: rays){
+//
+//		Vector temp = findColor(ray, hittables, lights);
+//		clamp(temp);
+//		colors.push_back(temp);
+//		if (isBar)
+//			bar.update(i++);
+//	}
+//}
+//
 
-void Renderer::findColors(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, std::vector<Vector>& colors){
+void Renderer::findColors(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, const Camera& cam, std::vector<Vector>& colors){
 	/* follows each ray generated in the constructor */
 
 	ProgressBar bar(50, width * height);
 	
-	int i = 1;
-	for (const Ray& ray: rays){
+	float alpha = (static_cast<float>(width) - 1.0f) / (static_cast<float>(height) - 1.0f);
+	
+	float deltax = 2.0f * cam.getPlaneDistance() * tan(cam.getFOV() / 2.0f);
+	float deltay = deltax / alpha;
 
-		Vector temp = findColor(ray, hittables, lights);
-		clamp(temp);
-		colors.push_back(temp);
-		if (isBar)
-			bar.update(i++);
+	float step = deltax / (static_cast<float>(width) - 1.0f);
+
+	for (int j = 0; j < height; j++){
+
+		for (int i = 0; i < width; i++){
+			
+			Vector v(-deltax / 2.0f + i * step,
+				 deltay / 2.0f - j * step,
+				 -cam.getPlaneDistance());
+
+			Vector color;
+
+			for (int k = 0; k < na; k++){
+				/* antialiasing */
+
+				Vector vtemp(v.x + randf(-step / 2.0f, step / 2.0f),
+					     v.y + randf(-step / 2.0f, step / 2.0f),
+					     v.z);
+				
+				vtemp.normalize();
+				vtemp = cam.getCamToWorld() * vtemp;			// direction in world coordinates
+
+				Ray rtemp(cam.getPosition(), vtemp);
+
+				Vector colortemp = findColor(rtemp, hittables, lights);
+				clamp(colortemp);
+				color += colortemp;
+			}
+			
+			color /= static_cast<float>(na);				// averaging over the samples
+
+			colors.push_back(color);
+			
+			if (isBar) { bar.update(i + j * width + 1); }
+
+		}
 	}
 }
 
 
-void Renderer::findColors(Scene& scene, std::vector<Vector>& colors){
+void Renderer::findColors(Scene& scene, const Camera& cam, std::vector<Vector>& colors){
 
-	findColors(scene.getHittables(), scene.getLights(), colors);
+	findColors(scene.getHittables(), scene.getLights(), cam, colors);
 }
 
 
@@ -266,7 +323,7 @@ void Renderer::findColorsAppend(std::vector<Hittable*>& hittables, const std::ve
 void Renderer::depthOfField(const Camera& baseCam,
 			    const Vector& f,					// focal point
 			    float a,						// aperture
-			    unsigned int N,
+			    unsigned int N,					// number of perturbations
 			    std::vector<Hittable*>& hittables, 
 			    const std::vector<Light>& lights, 
 			    std::vector<Vector>& colors){

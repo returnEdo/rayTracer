@@ -20,7 +20,7 @@
 
 int main(){
 
-	const int width = 1500;
+	const int width = 100;
 	const int height = width;
 	
 	std::string address = "renderings/trial.jpg";
@@ -39,8 +39,8 @@ int main(){
 	//renderer.setSkybox(skybox);
 	renderer.setRays(camera);
 
-	Sphere sphere1(Vector(1.0f, .0f, -3.0f), 2.0f);
-	sphere1.getMaterial().color = MAGIC_MINT;
+	Sphere sphere1(Vector(1.0f, .0f, -3.0f), 3.0f);
+	sphere1.getMaterial().color = MELON;
 	sphere1.getMaterial().psia = .3f;
 	sphere1.getMaterial().psis = .6f;
 	sphere1.getMaterial().psid = .6f;
@@ -74,13 +74,13 @@ int main(){
 
 	Light light1(Vector(10.0f, .0f, .0f));
 
-	std::vector<Hittable*> hittables = {&cylinder,
+	std::vector<Hittable*> hittables = {
 					    &sphere1
 					    };
 	std::vector<Light> lights = {light1};
-
 	
-	renderer.findColors(hittables, lights, colors);
+	renderer.setSamples(500);
+	renderer.findColors(hittables, lights, camera, colors);
 	
 	saveJpg(address, renderer.getWidth(), renderer.getHeight(), colors);
 	

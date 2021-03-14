@@ -1,5 +1,5 @@
-main: depthOfField.cpp DepthOfField.o Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o
-	g++ depthOfField.cpp DepthOfField.o Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o -o main
+main: light.cpp SpotLight.o DirectionalLight.o DepthOfField.o Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o
+	g++ light.cpp SpotLight.o DirectionalLight.o DepthOfField.o Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o -o main
 
 Cylinder.o: Cylinder.cpp
 	g++ Cylinder.cpp -c
@@ -42,6 +42,12 @@ Renderer.o: Renderer.cpp
 
 Light.o: Light.cpp
 	g++ Light.cpp -c
+
+DirectionalLight.o: DirectionalLight.cpp
+	g++ DirectionalLight.cpp -c
+
+SpotLight.o: SpotLight.cpp
+	g++ SpotLight.cpp -c
 
 Material.o: Material.cpp
 	g++ Material.cpp -c

@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 
-Scene::Scene(const std::vector<Hittable*>& hittables_, const std::vector<Light>& lights_):
+Scene::Scene(std::vector<Hittable*>& hittables_, std::vector<Light*>& lights_):
 		hittables(hittables_),
 		lights(lights_)		{}
 

@@ -20,6 +20,6 @@ class DepthOfField{
 
 	DepthOfField(const Vector& f_, float a_);
 
-	void render(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, 
+	void render(std::vector<Hittable*>& hittables, std::vector<Light*>& lights, 
 		    Renderer& renderer, const Camera& cam, std::vector<Vector>& colors, int N = 10) const;
 };

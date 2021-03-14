@@ -15,6 +15,7 @@
 #include "JPGTools.h"
 #include "DepthOfField.h"
 #include "PastelPalette.h"
+#include "LightSystem.h"
 
 
 int main(){
@@ -31,10 +32,10 @@ int main(){
 	Skybox skybox(skyAddr);
 	skybox.setPhi(M_PI / 2.0f);
 
-	Camera camera(Vector(.0f, -1.0f, 8.0f), Vector());
+	Camera camera(Vector(.0f, 5.0f, 5.0f), Vector());
 	Renderer renderer(width, height);
 	renderer.setIsBar(true);
-	renderer.setSkybox(skybox);
+//	renderer.setSkybox(skybox);
 
 	Sphere sphere1(Vector(-4.0f, .0f, 4.0f), 2.0f);
 	sphere1.getMaterial().color = MAGIC_MINT;
@@ -66,23 +67,21 @@ int main(){
 	sphere3.getMaterial().f = 100.0f;
 
 	ChequeredPlane plane(-2.0f, Vector(1.0f, .95f, .85f), Vector(.2f, .3f, .3f));
-	plane.getMaterial().psia = .3f;
+	plane.getMaterial().psia = .01f;
 	plane.getMaterial().psis = .5f;
 	plane.getMaterial().psid = .4f;
 	plane.getMaterial().rhor = .5f;
 	plane.getMaterial().rhoe = .00f;
 	plane.getMaterial().f = 100.0f;
 	
+	
+	std::array<float, 3> k = {1.0f, 1.0f, 1.0f};
+	SpotLight light1(Vector(0.0f, 10.0f, 0.0f), Vector(0.8f, .8f, .4f),  {.1f, .01f, .001f}, Vector(.0f, -1.0f, .0f), 500.0f);
 
-	Light light1(Vector(50.0f, 50.0f, 50.0f), Vector(1.0f));
-	Light light2(Vector(.0f, 100.0f, .0f), Vector(1.0f));
-
-	std::vector<Hittable*> hittables = {&sphere1,
-					    &sphere2,
-					    &sphere3,
+	std::vector<Hittable*> hittables = {
 					    &plane
 					    };
-	std::vector<Light*> lights = {&light1, &light2};
+	std::vector<Light*> lights = {&light1};
 
 	
 	float a = .08f;

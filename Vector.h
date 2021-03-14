@@ -16,6 +16,7 @@ class Vector{
 	Vector(float xx, float yy, float zz);
 	Vector(const Vector& other);
 	Vector(const std::vector<float>& other);
+	Vector(float xyz);
 	Vector(void);
 
 	void getRaw(float* data) const;

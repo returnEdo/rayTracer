@@ -6,6 +6,7 @@
 Vector::Vector(float xx, float yy, float zz):  		x(xx),	y(yy),	z(zz)		{}
 Vector::Vector(const Vector& other):			x(other.x), y(other.y), z(other.z)	{}		
 Vector::Vector(const std::vector<float>& other): 	x(other[0]), y(other[1]), z(other[2])	{}
+Vector::Vector(float xyz):				x(xyz), y(xyz), z(xyz)	{}
 Vector::Vector(void):					x(.0),	y(.0),	z(.0)	{}
 
 void Vector::getRaw(float* data) const{

@@ -137,7 +137,7 @@ void Renderer::checkIntersections(const Ray& ray, std::vector<Hittable*>& hittab
 }
 
 
-Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, const std::vector<Light>& lights, int depth) {
+Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, std::vector<Light*>& lights, int depth) {
 	/* follows the ray to find its color */
 
 	Collision collision;
@@ -173,9 +173,9 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, co
 		Ray e;								// refracted
 		bool isRefracted = getScatteredRays(r, e, collision.n, collision.v, ray.getDirection(), collision.material -> eta);
 
-		for (const Light& light: lights){
+		for (Light* light: lights){
 
-			Vector l = light.getPosition() - collision.v;
+			Vector l = light -> getPosition() - collision.v;
 			l.normalize();
 
 			float lightScl = l * collision.n;
@@ -192,9 +192,10 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, co
 					/* there is direct illumination */
 					/* add diffusion and specular reflection effects */
 					
-					color += (m.color % light.getColor()) * (m.psid * (lightScl) + 
-										 m.psis * pow((r.getDirection() * l), m.f) / 
-										 (1.0f - m.rhor - m.rhoe));
+					color += (m.color % light -> getColor()) * (m.psid * (lightScl) + 
+								 		 m.psis * pow((r.getDirection() * l), m.f) / 
+										 (1.0f - m.rhor - m.rhoe)) * 
+										 (light -> getIntensityAt(collision.v));
 				}
 			}
 		}
@@ -232,7 +233,7 @@ void Renderer::clamp(Vector& vec) const{
 }
 
 
-void Renderer::findColors(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, const Camera& cam, std::vector<Vector>& colors, bool accumulation){
+void Renderer::findColors(std::vector<Hittable*>& hittables, std::vector<Light*>& lights, const Camera& cam, std::vector<Vector>& colors, bool accumulation){
 	/* follows each ray generated in the constructor */
 
 	ProgressBar bar(50, width * height);

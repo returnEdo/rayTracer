@@ -60,7 +60,7 @@ class Renderer{
 	bool getScatteredRays(Ray& r, Ray& e, const Vector& n, const Vector& v, const Vector& d, float eta);
 	void checkIntersections(const Ray& ray, std::vector<Hittable*>& hittables, Collision& collision) const;
 
-	Vector findColor(const Ray& ray, std::vector<Hittable*>& hittables, const std::vector<Light>& lights, int depth = 0);
-	void findColors(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, const Camera& cam, std::vector<Vector>& colors, bool accumulation = false);
+	Vector findColor(const Ray& ray, std::vector<Hittable*>& hittables, std::vector<Light*>& lights, int depth = 0);
+	void findColors(std::vector<Hittable*>& hittables, std::vector<Light*>& lights, const Camera& cam, std::vector<Vector>& colors, bool accumulation = false);
 	void findColors(Scene& scene, const Camera& cam, std::vector<Vector>& colors, bool accumulation = false);
 };

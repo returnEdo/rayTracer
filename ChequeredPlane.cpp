@@ -1,5 +1,7 @@
 #include "ChequeredPlane.h"
 
+#include <cmath>
+
 
 ChequeredPlane::ChequeredPlane(float a_, const Vector& col1_, const Vector& col2_):
 		a(a_), col1(col1_), col2(col2_) {}
@@ -7,8 +9,7 @@ ChequeredPlane::ChequeredPlane(float a_, const Vector& col1_, const Vector& col2
 
 void ChequeredPlane::setColor(float x, float z){
 
-	
-	int ev = static_cast<int>(x) + static_cast<int>(z);
+	int ev = static_cast<int>(floor(x) + floor(z));
 	
 	material.color = (ev % 2 == 0? col1: col2);
 

@@ -61,10 +61,6 @@ class Renderer{
 	void checkIntersections(const Ray& ray, std::vector<Hittable*>& hittables, Collision& collision) const;
 
 	Vector findColor(const Ray& ray, std::vector<Hittable*>& hittables, const std::vector<Light>& lights, int depth = 0);
-	void findColors(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, const Camera& cam, std::vector<Vector>& colors);
-	void findColors(Scene& scene, const Camera& cam, std::vector<Vector>& colors);
-	void findColorsAppend(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, std::vector<Vector>& colors, float oneN);
-
-	void depthOfField(const Camera& baseCam, const Vector& f, float a, unsigned int N,
-			  std::vector<Hittable*>& hittables, const std::vector<Light>& lights, std::vector<Vector>& colors);
+	void findColors(std::vector<Hittable*>& hittables, const std::vector<Light>& lights, const Camera& cam, std::vector<Vector>& colors, bool accumulation = false);
+	void findColors(Scene& scene, const Camera& cam, std::vector<Vector>& colors, bool accumulation = false);
 };

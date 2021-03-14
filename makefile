@@ -1,5 +1,5 @@
-main: main2.cpp Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o
-	g++ main2.cpp Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o -o main
+main: depthOfField.cpp DepthOfField.o Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o
+	g++ depthOfField.cpp DepthOfField.o Scene.o Skybox.o JPGTools.o Hittable.o Cylinder.o Cuboid.o ChequeredPlane.o ProgressBar.o PPMtools.o Light.o Renderer.o Ray.o Camera.o Matrix.o Vector.o Sphere.o Material.o Collision.o -o main
 
 Cylinder.o: Cylinder.cpp
 	g++ Cylinder.cpp -c
@@ -54,6 +54,9 @@ ProgressBar.o: ProgressBar.cpp
 
 Collision.o: Collision.cpp
 	g++ Collision.cpp -c
+
+DepthOfField.o: DepthOfField.cpp
+	g++ DepthOfField.cpp -c
 
 clean:
 	rm *.o

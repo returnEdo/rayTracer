@@ -40,4 +40,6 @@ class Hittable{
 	/* fills the collision object */
 	virtual void checkCollision(const Ray& ray, Collision& collision) = 0;
 	virtual const Vector& sampleTexture(float u, float v) const = 0;
+
+	virtual bool isInside(const Vector& x) const = 0;
 };	

@@ -25,5 +25,7 @@ class Sphere: public Hittable{
 
 	virtual void checkCollision(const Ray& ray, Collision& collision) override;
 	virtual const Vector& sampleTexture(float theta, float y) const override;
+
+	virtual bool isInside(const Vector& x) const override;
 };
 

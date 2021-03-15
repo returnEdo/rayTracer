@@ -106,6 +106,12 @@ const Vector& Cylinder::sampleTexture(float l, float theta) const{
 
 
 
+bool Cylinder::isInside(const Vector& v) const{
+
+	Vector vl = R * (v - x);
+
+	return isInsideLocal(vl);
+}
 
 
 

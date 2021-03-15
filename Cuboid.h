@@ -29,5 +29,7 @@ class Cuboid: public Hittable{
 
 	virtual void checkCollision(const Ray& ray, Collision& collision) override;
 	virtual const Vector& sampleTexture(float u, float v) const override;
+
+	virtual bool isInside(const Vector& v) const override;
 };
 

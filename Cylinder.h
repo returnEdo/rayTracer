@@ -30,4 +30,6 @@ class Cylinder: public Hittable{
 
 	virtual void checkCollision(const Ray& ray, Collision& collision) override;
 	virtual const Vector& sampleTexture(float l, float theta) const override;
+
+	virtual bool isInside(const Vector& v) const;
 };

@@ -103,3 +103,12 @@ const Vector& Cuboid::sampleTexture(float u, float v) const{
 
 	return x;
 }
+
+
+bool Cuboid::isInside(const Vector& v) const{
+
+	Vector vl = R * (v - x);
+	
+	return isInsideLocal(vl);
+}
+

@@ -23,4 +23,6 @@ class ChequeredPlane: public Hittable{
 
 	void checkCollision(const Ray& ray, Collision& collision);
 	virtual const Vector& sampleTexture(float u, float v) const override { return material.color; }
+
+	inline virtual bool isInside(const Vector& x) const override { return (x.y < a); }
 };

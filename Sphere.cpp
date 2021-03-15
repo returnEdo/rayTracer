@@ -89,4 +89,11 @@ void Sphere::getNormal(const Vector& v, Vector& n) const{
 
 
 
+bool Sphere::isInside(const Vector& x) const{
+
+	Vector diff = x - center;
+	
+	return norm(diff) <= radius;
+}
+
 

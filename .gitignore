@@ -5,3 +5,5 @@ renderings/
 *.xopp
 !*.cpp
 !*.h
+*Test.cpp
+*Test

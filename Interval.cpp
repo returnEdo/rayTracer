@@ -2,13 +2,7 @@
 
 #include <algorithm>
 
-
-bool comparef(float a, float b){
-
-	float diff = (a - b > .0f? a - b: b - a);
-
-	return (diff < EPSILON); 
-}
+#include "MathMisc.h"
 
 
 Interval::Interval(float a_, float b_):
@@ -274,15 +268,14 @@ void IntervalSet::insertInterval(const Interval& interval){
 	std::vector<Interval>::iterator it;
 	it  = std::find(intervals.begin(), intervals.end(), interval);
 	int indx = it - intervals.begin();
-
-	if (indx >= 1 and intervals[indx - 1].get_b() > interval.get_a()){
-		/* first overlapping interval */
-		
-		indx--;
-	}
+	
+	
+	/* first overlapping interval */
+	if (indx >= 1 and intervals[indx - 1].get_b() > interval.get_a())	{ indx--; }
 
 	int i = indx;
 	while (i < intervals.size() - 1 and intervals[i].get_b() >= intervals[i + 1].get_a()){
+		/* as long as there is overlapping */
 		
 		if (intervals[i].get_b() < intervals[i + 1].get_b()){
 			/* merge if necessary */
@@ -293,4 +286,3 @@ void IntervalSet::insertInterval(const Interval& interval){
 		intervals.erase(intervals.begin() + i + 1);
 	}
 }
-

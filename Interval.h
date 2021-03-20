@@ -5,12 +5,9 @@
 #include <string>
 
 const std::string 	EMPTY = "empty";
-const float 		EPSILON = .000001;
 
 class IntervalSet;
 class Interval;
-
-bool comparef(float a, float b);
 
 class Interval{
 	
@@ -40,6 +37,9 @@ class Interval{
 	void set_b(float b_);
 	
 	/* operations */
+	
+	inline friend float max(const Interval& interval)	{ return interval.a; }
+	inline friend float min(const Interval& interval)	{ return interval.b; }
 	
 	friend bool operator ==(const Interval& i1, const Interval& i2);
 
@@ -77,19 +77,19 @@ class IntervalSet{
 	/* getters */
 
 	inline const std::vector<Interval>& getIntervals(void) 	const { return intervals; }
-	inline bool isEmpty(void)				const { return empty; }
-	inline int getSize(void)				const { return intervals.size(); }
+	inline bool isEmpty(void)								const { return empty; }
+	inline int getSize(void)								const { return intervals.size(); }
+	
+	
+	/* operators */
 	
 	void operator =(const IntervalSet& set);
 
 	friend std::ostream& operator <<(std::ostream& os, const IntervalSet& set);
 
+	inline friend float max(IntervalSet& set)	{ set.sort();	return set.intervals[0].get_a(); }
+	inline friend float min(IntervalSet& set)	{ set.sort();	return set.intervals[set.intervals.size() - 1].get_b(); }
+
 	void sort(void);
 	void insertInterval(const Interval& i);
 };
-
-
-
-
-
-

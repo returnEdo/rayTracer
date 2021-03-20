@@ -5,18 +5,10 @@
 
 #include "RayTracerConstants.h"
 #include "ProgressBar.h"
+#include "Interval.h"
+#include "MathMisc.h"
 
 
-float randf(float vmax){
-
-	return static_cast<float>(rand() / static_cast<float>(RAND_MAX)) * vmax;
-}
-
-float randf(float m, float M){
-	
-	return (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * (M - m) + m);
-
-}
 
 Renderer::Renderer(int width_, int height_, int na_):
 		width(width_),
@@ -160,7 +152,7 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, st
 		}
 	}
 	else{
-		/* recursive path floowing */
+		/* recursive path following */
 
 		Material m = *(collision.material);
 		Vector color = m.psia * m.color;				// "base" color
@@ -168,10 +160,25 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, st
 		float scl = collision.n * ray.getDirection();
 		bool inside = (scl > 0.0f);					// ray origin is inside the hittable
 
+		float occlusionFactor = 1.0f;
+
+		if (isOcclusion){
+		
+			float f = findOcclusionFactor(collision.v, collision.n, hittables);
+			occlusionFactor = 1.0f - pow(f, alpha);
+		}
+
 		/* build reflected and refracted rays */
 		Ray r;								// reflected
 		Ray e;								// refracted
 		bool isRefracted = getScatteredRays(r, e, collision.n, collision.v, ray.getDirection(), collision.material -> eta);
+
+		/* glossy effects */
+		if (m.glossy_radius > ZERO_TOLL){
+
+			Vector newDirection = perturbDirection(r.getDirection(), m.glossy_radius);
+			r.setDirection(newDirection);
+		}
 
 		for (Light* light: lights){
 
@@ -195,7 +202,8 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, st
 					color += (m.color % light -> getColor()) * (m.psid * (lightScl) + 
 								 		 m.psis * pow((r.getDirection() * l), m.f) / 
 										 (1.0f - m.rhor - m.rhoe)) * 
-										 (light -> getIntensityAt(collision.v));
+										 (light -> getIntensityAt(collision.v)) * 
+										 occlusionFactor;
 				}
 			}
 		}
@@ -268,12 +276,29 @@ void Renderer::findColors(std::vector<Hittable*>& hittables, std::vector<Light*>
 				Ray rtemp(cam.getPosition(), vtemp);
 
 				Vector colortemp = findColor(rtemp, hittables, lights);
-				clamp(colortemp);
+		//		clamp(colortemp);
+		//		color += colortemp;
+		//	}
+		//	
+		//	color /= static_cast<float>(na);				// averaging over the samples
+		//	std::cout << color << std::endl;
+		//	color.x = pow(color.x, 2.0f);
+		//	color.y = pow(color.y, 2.0f);
+		//	color.z = pow(color.z, 2.0f);
+		//	std::cout << color << std::endl;
+				
 				color += colortemp;
 			}
+
+			color /= static_cast<float>(na);
 			
-			color /= static_cast<float>(na);				// averaging over the samples
-	
+			float gamma = .8f;
+			color.x = pow(color.x, gamma);
+			color.y = pow(color.y, gamma);
+			color.z = pow(color.z, gamma);
+
+			clamp(color);
+			
 			if (accumulation)	{ colors[i + j * width] += color; }
 			else 			{ colors.push_back(color); }
 			
@@ -290,3 +315,59 @@ void Renderer::findColors(Scene& scene, const Camera& cam, std::vector<Vector>& 
 }
 
 
+Vector Renderer::perturbDirection(const Vector& vec, float rho) const{
+
+	float theta = randf(2.0f * M_PI);	// longitude
+	float psi = randf(2.0f * M_PI);		// latitude
+	
+	Vector delta(cos(theta) * cos(psi) * rho,
+		     sin(theta) *rho,
+		     sin(theta) * cos(psi) * rho);
+
+	Vector newDirection = vec + delta;
+	newDirection.normalize();
+
+	return newDirection;
+}
+
+
+float Renderer::findOcclusionFactor(const Vector& v, const Vector& n, std::vector<Hittable*>& hittables){
+
+	/* start by building an orthonormal tern */
+
+	Vector i(1.0f, .0f, .0f);
+	Vector j(.0f, 1.0f, .0f);
+	Vector k(.0f, .0f, 1.0f);
+
+	Vector mi = i;
+	
+	if (comparef(i * n, .0f))	{ mi = j; }
+	else if (comparef(j * n, .0f))	{ mi = k; }
+
+	Vector m = mi - (mi * n) * n;
+	normalize(m);
+
+	Vector o = n ^ m;
+	
+	/* find the occluded rays */
+	float counter = .0;
+	for (int l = 0; l < no; l++){
+		
+		float theta = randf(2.0f * M_PI);
+		float psi = randf(.01f,  M_PI / 2.0f);
+
+		Vector randDirection(cos(theta) * cos(psi),
+				     sin(psi), 
+				     sin(theta) * cos(psi));
+
+		Ray randRay(v + DELTA * n, randDirection);
+		
+		Collision feeler;
+
+		checkIntersections(randRay, hittables, feeler);
+		
+		if (feeler.hasCollided)	{ counter += 1.0f; }
+	}
+	
+	return counter / static_cast<float>(no);
+}

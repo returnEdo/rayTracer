@@ -19,6 +19,7 @@ class Material{
 	float	psia	= DEF_AMB;		// ambientivity
 	float	f	= DEF_EXP;		// specular exponent -> sets shiness dimension
 	float 	eta 	= DEF_ETA;		// snell law ratio (>= 1.0f)
+	float 	glossy_radius = DEF_GLOSSY_RADIUS;		// for glossy effects
 
 	void operator =(const Material& other);
 };

@@ -28,4 +28,8 @@ class Camera{
 	inline const Matrix& getCamToWorld(void) const { return Rcw; }
 	inline float getPlaneDistance(void)	 const { return p; }
 	inline float getFOV(void)		 const { return FOV; }
+
+	/* setters */
+	inline void setPlaneDistance(float p_)		{ p = p_; }
+	inline void setFOV(float FOV_)			{ FOV = FOV_; }
 };

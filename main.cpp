@@ -7,116 +7,127 @@
 #include "Skybox.h"
 #include "Renderer.h"
 #include "Sphere.h"
+#include "Cuboid.h"
+#include "Cylinder.h"
 #include "ChequeredPlane.h"
 #include "Collision.h"
 #include "Vector.h"
 #include "Camera.h"
 #include "PPMtools.h"
 #include "JPGTools.h"
+#include "DepthOfField.h"
+#include "PastelPalette.h"
+#include "LightSystem.h"
 
 
-int main(){
+int main(int argc, char** argv){
+	
+	std::string address = "rayTracer";
+	if (argc > 0){
+		
+		address = std::string(*(argv+1));
+	}
+	address = "renderings/" + address + ".jpg";
 
-	const int width = 1500;
+	const int width = 800;
 	const int height = width;
 	
-	std::string address = "renderings/trial.jpg";
-	std::string textAddr = "earth.jpg";
-	std::string skyAddr = "skyboxes/milky.jpg";
+	std::string textAddr = "textures/earth.jpg";
+	std::string skyAddr = "skyboxes/campus.jpg";
 	std::vector<Vector> colors;
 
-	float r = 1.0f;
+	Material material;
+	material.color = SALMON;
+	material.psia = .3f;
+	material.psis = .5f;
+	material.psid = .5f;
+	material.rhor = .3f;
+	material.rhoe = .0f;
+	material.f = 100.0f;
+
+	Material mat;
+	mat.color = INDIGO * .6f;
+	mat.psia = .4f;
+	mat.psis = .6f;
+	mat.psid = .5f;
+	mat.rhor = .1f;
+	mat.rhoe = .7f;
+	mat.f = 100.0f;
+	mat.eta = 1.22f;
 
 	Skybox skybox(skyAddr);
-	skybox.setPhi(3.14f);
+	skybox.setPhi(M_PI / 2.0f * 3.0f);
 
-	Camera camera(Vector(.0f * r, .2f, 6.0f * r), Vector(.0f, .0f, .0f));
+	float distance = 5.0f;
+	float rho = 1.7f;
+
+	Camera camera(Vector(.0f, .0f, distance + 2.0f), Vector());
+	camera.setFOV(M_PI / 3.0f);
+
 	Renderer renderer(width, height);
 	renderer.setIsBar(true);
-	renderer.setSkybox(skybox);
-	renderer.setRays(camera);
-
-	Sphere sphere1(Vector(r * 2.0f, 0.0f, -r * 6.0f), r);
-	sphere1.getMaterial().color = Vector(.8f, .2f, .2f);
-	sphere1.getMaterial().psia = .3f;
-	sphere1.getMaterial().psis = .8f;
-	sphere1.getMaterial().psid = .6f;
-	sphere1.getMaterial().rhor = .17f;
-	sphere1.getMaterial().rhoe = .00f;
-	sphere1.getMaterial().f = 8.0f;
-	sphere1.getMaterial().eta = 1.23f;
-//
-//	Sphere sphere2(Vector(), r);
-//	sphere2.getMaterial().color = Vector(.2f, .8f, .2f);
-//	sphere2.getMaterial().psia = .3f;
-//	sphere2.getMaterial().psis = .9f;
-//	sphere2.getMaterial().psid = .6f;
-//	sphere2.getMaterial().rhor = .3f;
-//	sphere2.getMaterial().rhoe = .0f;
-//	sphere2.getMaterial().f = 400.0f;
-
-	Sphere sphere2(Vector(), r);
-	sphere2.getMaterial().color = Vector(.3f, .3f, .3f);
-	sphere2.getMaterial().psia = .3f;
-	sphere2.getMaterial().psis = .6f;
-	sphere2.getMaterial().psid = .6f;
-	sphere2.getMaterial().rhor = .0f;
-	sphere2.getMaterial().rhoe = .8f;
-	sphere2.getMaterial().f = 400.0f;
-	sphere2.getMaterial().eta = 1.2f;
-
-	sphere2.setTexture(textAddr);
-
-//	sphere2.setTexture(textAddr);
-
-	Sphere sphere3(Vector(r * 2.0f, .0f, -r * 2.0f), r);
-	sphere3.getMaterial().color = Vector(.2f, .2f, .8f);
-	sphere3.getMaterial().psia = .3f;
-	sphere3.getMaterial().psis = .4f;
-	sphere3.getMaterial().psid = .6f;
-	sphere3.getMaterial().rhor = .02f;
-	sphere3.getMaterial().rhoe = .0f;
-	sphere3.getMaterial().f = 100.0f;
-
-	sphere3.setTexture(textAddr);
-
-
-	Sphere sphere4(Vector(.0f, 4.0f * r, .0f), r * 2.0f);
-	sphere4.getMaterial().color = Vector(.8f, .8f, .8f);
-	sphere4.getMaterial().psia = .3f;
-	sphere4.getMaterial().psis = .5f;
-	sphere4.getMaterial().psid = .4f;
-	sphere4.getMaterial().rhor = .95f;
-	sphere4.getMaterial().rhoe = .00f;
-	sphere4.getMaterial().f = 500.0f;
-	
-	ChequeredPlane plane(-2.0f * r, Vector(1.0f, .95f, .85f), Vector(.2f, .3f, .3f));
-	plane.getMaterial().psia = .3f;
-	plane.getMaterial().psis = .5f;
-	plane.getMaterial().psid = .4f;
-	plane.getMaterial().rhor = .5f;
-	plane.getMaterial().rhoe = .00f;
-	plane.getMaterial().f = 100.0f;
+	renderer.setAmbientOcclusionSamples(60.0);
+//	renderer.setIsOcclusion(true);
+	renderer.setOcclusionExponent(0.8f);
+	renderer.setSamples(3);
 	
 
-	Light light1(Vector(50.0f, 50.0f, 50.0f));
-	Light light2(Vector(-2.0f * r, 40.0f, -2.0f * r));
+	Sphere sphere1(Vector(), 1.0f);
+	Sphere sphere2(Vector(.0f, rho, distance), 1.0f);
+	Sphere sphere3(Vector(rho * cos(M_PI / 6.0f), -rho * sin(M_PI / 6.0f), distance), 1.0f);
+	Sphere sphere4(Vector(-rho * cos(M_PI / 6.0f), -rho * sin(M_PI / 6.0f), distance), 1.0f);
 
-	std::vector<Hittable*> hittables = {&sphere2,
-					    &sphere1
+	Sphere sphere7(Vector(.0f, -rho * 2.0f, -distance), 2.0f);
+	Sphere sphere5(Vector(rho *2.0f* cos(M_PI / 6.0f), rho *2.0f* sin(M_PI / 6.0f), -distance), 2.0f);
+	Sphere sphere6(Vector(-rho *2.0f* cos(M_PI / 6.0f), rho *2.0f* sin(M_PI / 6.0f), -distance), 2.0f);
+
+	float f = .7f;
+
+	sphere1.setMaterial(mat);
+
+	sphere2.setMaterial(material);
+	sphere2.getMaterial().color = PURPLE * f;
+
+	sphere3.setMaterial(material);
+	sphere3.getMaterial().color = MAGIC_MINT * f;
+
+	sphere4.setMaterial(material);
+	sphere4.getMaterial().color = INDIGO * f;
+
+	sphere5.setMaterial(material);
+	sphere5.getMaterial().color = PURPLE * f;
+
+	sphere6.setMaterial(material);
+	sphere6.getMaterial().color = MAGIC_MINT * f;
+
+	sphere7.setMaterial(material);
+	sphere7.getMaterial().color = INDIGO * f;
+
+
+
+	Light light1(Vector(-3.0f, 10.0f, 0.f), Vector(1.0f));
+	Light light2(Vector(3.0f, 10.0f, 0.f), Vector(1.0f));
+	
+	std::vector<Hittable*> hittables = {
+					    &sphere1,
+					    &sphere2,
+					    &sphere3,
+					    &sphere4,
+					    &sphere5,
+					    &sphere6,
+					    &sphere7
 					    };
-	std::vector<Light> lights = {light1, light2};
+	std::vector<Light*> lights = {&light1, &light2};
 
 	
-	Vector f = sphere2.getCenter();
-	float a = .15f;
-	unsigned int N = 30;
+	float a = .06f;
+	int N = 26;
 
-//	renderer.depthOfField(camera, f, a, N, hittables, lights, colors);
-	
-	renderer.findColors(hittables, lights, colors);
-	
-//	savePPM(address, colors, width, height);
+	DepthOfField dof(Vector(), a);
+	dof.render(hittables, lights, renderer, camera, colors, N);	
+
+//	renderer.findColors(hittables, lights, camera, colors);
+
 	saveJpg(address, renderer.getWidth(), renderer.getHeight(), colors);
 	
 

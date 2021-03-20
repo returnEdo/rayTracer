@@ -5,7 +5,7 @@
 #include "Hittable.h"
 #include "Collision.h"
 #include "Ray.h"
-
+#include "Interval.h"
 
 class Cuboid: public Hittable{
 

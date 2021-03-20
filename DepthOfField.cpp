@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "MathMisc.h"
+
 DepthOfField::DepthOfField(const Vector& f_, float a_):
 		f(f_),
 		a(a_) {

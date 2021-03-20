@@ -8,7 +8,9 @@ Rotor::Rotor(float aa, float bb, float cc, float dd):
 
 Rotor::Rotor(const Vector& k, float theta):
     a(cos(theta / 2)),
-    b(sin(theta / 2))
+    b(sin(theta / 2)),
+    c(sin(theta / 2)),
+    d(sin(theta / 2))	{}
 	
 
 float Rotor::norm(void){

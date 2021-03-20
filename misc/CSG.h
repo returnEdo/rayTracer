@@ -4,6 +4,7 @@
 #include "Ray.h"
 #include "Collision.h"
 #include "Vector.h"
+#include "Interval.h"
 	
 /* constructive solid geometry */
 
@@ -19,12 +20,14 @@ class CSG: public Hittable{
 
 	private:
 
+	Vector v = Vector();
+
 	Hittable* h1;
 	Hittable* h2;
 
 	BOperation type;
 
-	void findIntersections(const Ray& ray, std::vector<Collision>& collisions);
+	void findInterval(const Ray& ray, Hittable* hittable, Interval& interval);
 
 	public:
 

@@ -16,13 +16,14 @@ const float	DEF_SPEC	= .3f;
 const float	DEF_AMB 	= .8f;
 const float	DEF_EXP 	= 100.0f;
 const float 	DEF_ETA 	= 1.0f;
+const float 	DEF_GLOSSY_RADIUS = .0f;
 
 /* Light constants */
 const Vector	DEF_LIGHT_COL(1.0f, 1.0f, 1.0f);
 
 /* Renderer constants */
 const Vector	BCK_COLOR(.2f, .2f, .2f);
-const int 	MAX_RECURSION_DEPTH	= 5;
+const int 	MAX_RECURSION_DEPTH	= 7;
 const float 	DELTA		= .0001f;
 const float	ZERO_TOLL	= .00001f;
 const float 	MINIMUM_INDEX	= .001f;		// minimum index admissible

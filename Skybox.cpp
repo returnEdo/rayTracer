@@ -25,8 +25,14 @@ const Vector& Skybox::sampleTexture(const Ray& ray) const{
 
 	int wi = static_cast<int>(static_cast<float>(textWidth) * psi / (2.0f * M_PI));
 	int hi = static_cast<int>((radius - y) * (static_cast<float>(textHeight)) / (2.0f * radius));
-
-	return texture[hi * textWidth + wi]; 
+	
+	int indx = hi * textWidth + wi;
+	if (indx >= 0 and indx < texture.size()){
+		return texture[hi * textWidth + wi]; 
+	}
+	else{
+		return texture[0];
+	}
 }
 
 

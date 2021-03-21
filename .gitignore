@@ -2,11 +2,10 @@ misc/
 tests/
 skyboxes/
 *.o
-*.jpg
 *.ppm
 *.xopp
 !*.cpp
 !*.h
 *Test.cpp
 *Test
-*.md
+

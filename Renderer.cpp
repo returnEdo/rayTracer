@@ -202,15 +202,15 @@ Vector Renderer::findColor(const Ray& ray, std::vector<Hittable*>& hittables, st
 					color += (m.color % light -> getColor()) * (m.psid * (lightScl) + 
 								 		 m.psis * pow((r.getDirection() * l), m.f) / 
 										 (1.0f - m.rhor - m.rhoe)) * 
-										 (light -> getIntensityAt(collision.v)) * 
-										 occlusionFactor;
+										 (light -> getIntensityAt(collision.v)); //* 
+										 //occlusionFactor;
 				}
 			}
 		}
 		
 		
 
-		color *= (1.0f - m.rhor - m.rhoe);
+		color *= (1.0f - m.rhor - m.rhoe) * occlusionFactor;
 		
 		/* if the coefficients are too low generating new rays is not convenient */
 		if (isRefracted and m.rhoe >= MINIMUM_INDEX){

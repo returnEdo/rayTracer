@@ -1,4 +1,6 @@
-renderings/
+misc/
+tests/
+skyboxes/
 *.o
 *.jpg
 *.ppm
@@ -7,3 +9,4 @@ renderings/
 !*.h
 *Test.cpp
 *Test
+*.md
